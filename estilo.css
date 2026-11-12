@@ -1,57 +1,707 @@
+/* ==========================================================================
+   1. VARIABLES DE DISEÑO Y CONTRASTE (WCAG 2.2 NIVEL AA)
+   ========================================================================== */
+:root {
+  --bg-principal: #111210;
+  --bg-secundario: #1a1c19;
+  --bg-tarjeta: #222521;
+  --texto-principal: #f4f4f0;     /* Ratio de contraste > 16:1 */
+  --texto-secundario: #c4c7be;    /* Ratio de contraste > 9.5:1 */
+  --verde: #9ef01a;               /* Acento principal (contraste > 12:1) */
+  --texto-sobre-verde: #0d0e0c;   /* Texto oscuro sobre acento verde */
+  --borde-sutil: #3a3e38;
+  --error-color: #ff6b6b;
+  --exito-color: #70e000;
+  --fuente-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fuente-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
 
-/* =========================================
-MEJORAS DE LEGIBILIDAD Y ACCESIBILIDAD
-========================================= */
+/* ==========================================================================
+   2. RESET Y BASE TIPOGRÁFICA
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+/* Respetar preferencia de movimiento reducido del sistema operativo (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: var(--bg-principal);
+  color: var(--texto-principal);
+  font-family: var(--fuente-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   3. MEJORAS DE LEGIBILIDAD Y ACCESIBILIDAD
+   ========================================================================== */
 /* Lectura de textos */
 .perfil,
 .panel-contenido p,
 .manifiesto > p,
-.especialidades-titulo p {
-    text-wrap: pretty;
+.especialidades-titulo p,
+.hero-descripcion,
+.seccion-subtitulo,
+.pauta-descripcion {
+  text-wrap: pretty;
 }
 
-/* Mejor identificación de los enlaces */
+/* Enlace de salto al contenido principal (WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: var(--verde);
+  color: var(--texto-sobre-verde);
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  z-index: 1000;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Mejor identificación de los enlaces y controles interactivos (WCAG 2.4.7 / 2.4.11) */
+:focus-visible,
 .panel:focus-visible,
 .contacto-header:focus-visible,
 .footer-boton:focus-visible,
 .footer-inferior a:focus-visible {
-    outline: 2px solid var(--verde);
-    outline-offset: 5px;
+  outline: 3px solid var(--verde);
+  outline-offset: 4px;
 }
 
-/* Transiciones accesibles */
-a {
-    -webkit-tap-highlight-color: transparent;
+/* Transiciones accesibles en dispositivos táctiles */
+a,
+button,
+label {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Evitar que el texto se salga de los paneles */
 .panel-contenido {
-    min-width: 0;
+  min-width: 0;
 }
 
 .panel-contenido p {
-    max-width: 100%;
+  max-width: 100%;
 }
 
-/* Mejor lectura en pantallas pequeñas */
+/* Clase utilitaria para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   4. ESTRUCTURA EDITORIAL Y ENCABEZADO
+   ========================================================================== */
+.contenedor {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.header {
+  border-bottom: 1px solid var(--borde-sutil);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.marca {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--texto-principal);
+  text-decoration: none;
+  letter-spacing: -0.03em;
+}
+
+.marca span {
+  color: var(--verde);
+}
+
+.header-centro {
+  font-family: var(--fuente-mono);
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+  letter-spacing: 0.08em;
+}
+
+.nav-principal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.nav-enlace {
+  color: var(--texto-principal);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--borde-sutil);
+  border-radius: 4px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.nav-enlace:hover {
+  background-color: var(--verde);
+  color: var(--texto-sobre-verde);
+  border-color: var(--verde);
+}
+
+/* ==========================================================================
+   5. HERO Y SECCIONES GENERALES
+   ========================================================================== */
+.hero {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--borde-sutil);
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--fuente-mono);
+  font-size: 0.8rem;
+  color: var(--verde);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+}
+
+h1 .punto {
+  color: var(--verde);
+}
+
+.hero-descripcion {
+  max-width: 65ch;
+  color: var(--texto-secundario);
+  font-size: 1.125rem;
+}
+
+.seccion {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--borde-sutil);
+}
+
+.seccion-cabecera {
+  margin-bottom: 2.5rem;
+}
+
+.numero-seccion {
+  font-family: var(--fuente-mono);
+  color: var(--verde);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.seccion-subtitulo {
+  color: var(--texto-secundario);
+  max-width: 65ch;
+}
+
+/* ==========================================================================
+   6. MÓDULO 1: ENCUESTA CON ESCALA LIKERT (5 PUNTOS)
+   ========================================================================== */
+.leyenda-escala {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde-sutil);
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  color: var(--texto-secundario);
+}
+
+.leyenda-escala strong {
+  color: var(--verde);
+}
+
+.pregunta-fieldset {
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde-sutil);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.pregunta-fieldset.invalida {
+  border-color: var(--error-color);
+  background-color: #241818;
+}
+
+.pregunta-legend {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+}
+
+.pregunta-numero {
+  font-family: var(--fuente-mono);
+  color: var(--verde);
+  margin-right: 0.5rem;
+}
+
+.opciones-likert {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+}
+
+.opcion-radio {
+  position: relative;
+}
+
+/* Radio button oculto visualmente pero navegable por teclado y lector de pantalla */
+.opcion-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  margin: 0;
+}
+
+.opcion-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 56px; /* Área táctil >= 44x44px (WCAG 2.5.8) */
+  padding: 0.65rem 0.5rem;
+  background: var(--bg-tarjeta);
+  border: 1px solid var(--borde-sutil);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--texto-secundario);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.opcion-valor {
+  font-family: var(--fuente-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  margin-bottom: 0.2rem;
+}
+
+.opcion-radio input[type="radio"]:hover + .opcion-label {
+  border-color: var(--verde);
+}
+
+.opcion-radio input[type="radio"]:focus-visible + .opcion-label {
+  outline: 3px solid var(--verde);
+  outline-offset: 2px;
+}
+
+.opcion-radio input[type="radio"]:checked + .opcion-label {
+  background: var(--verde);
+  color: var(--texto-sobre-verde);
+  border-color: var(--verde);
+  font-weight: 700;
+}
+
+.opcion-radio input[type="radio"]:checked + .opcion-label .opcion-valor {
+  color: var(--texto-sobre-verde);
+}
+
+.mensaje-error-pregunta {
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+  font-weight: 600;
+  display: none;
+}
+
+.pregunta-fieldset.invalida .mensaje-error-pregunta {
+  display: block;
+}
+
+/* Botones y Panel de Resultados */
+.acciones-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  font-family: var(--fuente-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.85rem 1.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  min-height: 48px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-primario {
+  background-color: var(--verde);
+  color: var(--texto-sobre-verde);
+}
+
+.btn-primario:hover {
+  background-color: #b5ff3b;
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: var(--texto-principal);
+  border-color: var(--borde-sutil);
+}
+
+.btn-secundario:hover {
+  border-color: var(--texto-principal);
+}
+
+.alerta-validacion {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  background-color: #2b1616;
+  border: 1px solid var(--error-color);
+  color: #ffd6d6;
+  font-weight: 600;
+  display: none;
+}
+
+.alerta-validacion.visible {
+  display: block;
+}
+
+.panel-resultados {
+  margin-top: 2rem;
+  background: var(--bg-secundario);
+  border: 2px solid var(--verde);
+  border-radius: 8px;
+  padding: 2rem;
+  display: none;
+}
+
+.panel-resultados.visible {
+  display: block;
+}
+
+.metricas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.metrica-card {
+  background: var(--bg-tarjeta);
+  padding: 1.25rem;
+  border-radius: 6px;
+  border: 1px solid var(--borde-sutil);
+}
+
+.metrica-etiqueta {
+  font-family: var(--fuente-mono);
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.metrica-valor {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--verde);
+}
+
+/* ==========================================================================
+   7. MÓDULO 2: CHECKLIST RESUMEN DE PAUTAS WCAG 2.2
+   ========================================================================== */
+.barra-progreso-wcag {
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde-sutil);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.progreso-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+.progreso-track {
+  width: 100%;
+  height: 14px;
+  background: var(--bg-tarjeta);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--borde-sutil);
+}
+
+.progreso-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--verde);
+  transition: width 0.3s ease;
+}
+
+.principios-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+.principio-grupo {
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde-sutil);
+  border-radius: 8px;
+  padding: 1.75rem;
+}
+
+.principio-titulo {
+  font-size: 1.35rem;
+  color: var(--verde);
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.principio-desc {
+  color: var(--texto-secundario);
+  font-size: 0.925rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--borde-sutil);
+}
+
+.lista-pautas {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.pauta-item {
+  background: var(--bg-tarjeta);
+  border: 1px solid var(--borde-sutil);
+  border-radius: 6px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.pauta-item.completada {
+  border-color: var(--verde);
+  background-color: #1c2418;
+}
+
+.pauta-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.pauta-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border: 2px solid var(--texto-secundario);
+  border-radius: 4px;
+  background: var(--bg-principal);
+  margin-top: 2px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.pauta-checkbox::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  background-color: var(--texto-sobre-verde);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.pauta-checkbox:checked {
+  background-color: var(--verde);
+  border-color: var(--verde);
+}
+
+.pauta-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.pauta-info {
+  flex: 1;
+}
+
+.pauta-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.pauta-nombre {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--texto-principal);
+}
+
+.pauta-item.completada .pauta-nombre {
+  text-decoration: line-through;
+  color: var(--texto-secundario);
+}
+
+.badge-nivel {
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: var(--bg-principal);
+  border: 1px solid var(--verde);
+  color: var(--verde);
+}
+
+.pauta-descripcion {
+  font-size: 0.9rem;
+  color: var(--texto-secundario);
+}
+
+/* ==========================================================================
+   8. PIE DE PÁGINA
+   ========================================================================== */
+.footer {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--texto-secundario);
+  font-size: 0.875rem;
+}
+
+.footer span {
+  color: var(--verde);
+}
+
+/* ==========================================================================
+   9. DISEÑO RESPONSIVE (MÓVIL Y PANTALLAS PEQUEÑAS)
+   ========================================================================== */
+@media (max-width: 720px) {
+  .opciones-likert {
+    grid-template-columns: 1fr;
+  }
+
+  .opcion-label {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+
+  .opcion-valor {
+    margin-bottom: 0;
+    min-width: 1.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Mejor lectura en pantallas pequeñas (integrado de tu hoja base) */
 @media (max-width: 600px) {
+  .perfil {
+    max-width: 100%;
+  }
 
-    .perfil {
-        max-width: 100%;
-    }
+  .especialidades-titulo p {
+    line-height: 1.7;
+    max-width: 100%;
+  }
 
-    .especialidades-titulo p {
-        line-height: 1.7;
-        max-width: 100%;
-    }
+  .panel-contenido p,
+  .manifiesto > p {
+    line-height: 1.9;
+  }
 
-    .panel-contenido p {
-        line-height: 1.9;
-    }
-
-    .manifiesto > p {
-        line-height: 1.9;
-    }
-
+  .principio-grupo,
+  .pregunta-fieldset,
+  .panel-resultados {
+    padding: 1.25rem;
+  }
 }
